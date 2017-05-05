@@ -19,9 +19,9 @@ class Gantry
 public:
 	static int gantryMoves;
 
-	static void moveIt(vector<int> * vec, vector<int>::iterator & it);
+	static void moveIt(vector<int> * vec, int k, vector<int>::iterator & it);
 
-	static void move(vector<int> * vec, int i);
+	static void move(vector<int> * vec, int k, int i);
 };
 
 

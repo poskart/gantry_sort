@@ -19,9 +19,11 @@ using namespace std;
 class SystematicFinder
 {
 public:
-	SystematicFinder(int k, vector<int> tip);
+	SystematicFinder(vector<int> * elements, int k, int startIndex);
 	virtual ~SystematicFinder();
-	vector<int> findMoveSequence();
+	unsigned int findBatch(void);
+	vector<int> findMoveSequence(unsigned int batchIndex);
+	void sortLastBatch();
 	void generateTree();
 	bool allEmptyAtLevelWithIndex(int index);
 	int depthFirstSearch(int startIndex, vector<int> * pattern);
@@ -31,7 +33,8 @@ public:
 private:
 	int k;
 	int p;
-	vector<int> initialVector;
+	int startIndex;
+	vector<int> * elementsVector;
 	vector<vector<int> *> tree;
 	vector<long> treeLevelsLastIndices;
 	int emptyVectorsCount;

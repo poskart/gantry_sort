@@ -7,59 +7,73 @@
 
 #include "common.h"
 
-int K = 4;
-int N = 14;
-
-
-inline const bool are2PartsInCorrectOrder(vector<int> * elements, int firstPosition, int secPosition)
+unsigned int getPossibleBatchesCount(vector<int> * elements, int k)
 {
-	if(firstPosition + 1 != secPosition)
+	unsigned int minPartsCount = UINT_MAX;
+	int * countingTable = new int[k + 1];
+	for(int i = 0; i < elements->size(); i++)
+	{
+		countingTable[elements->at(i)]++;
+	}
+	for(int i = 1; i < k+1; i++)
+	{
+		if(countingTable[i] < minPartsCount)
+			minPartsCount = countingTable[i];
+	}
+	return minPartsCount;
+}
+
+inline const bool are2PartsInCorrectOrder(vector<int> * elements,
+		int k, int firstPosition, int secPosition)
+{
+	if (firstPosition + 1 != secPosition)
 		return false;
-	if(((elements->at(firstPosition))%K + 1) == elements->at(secPosition))
+	if (((elements->at(firstPosition)) % k + 1) == elements->at(secPosition))
 		return true;
 	return false;
 }
 
-bool isSetFound(vector<int> * vec, int index)
+bool isSetFound(vector<int> * vec, int k, int index)
 {
-	for(int i = 0; i < K; i++)
+	for (int i = 0; i < k; i++)
 	{
-		if(vec->at(index) != i + 1)
+		if (vec->at(index) != i + 1)
 			return false;
 		index++;
 	}
 	return true;
 }
 
-bool isSetFoundInLastM(vector<int> * vec, int startIndex)
+bool isSetFoundInLastM(vector<int> * vec, int k, int startIndex)
 {
-	for(int i = startIndex; i <= N - K; i++)
+	for (unsigned int i = startIndex; i <= vec->size() - k; i++)
 	{
-		if(isSetFound(vec, i))
+		if (isSetFound(vec, k, i))
 			return true;
 	}
 	return false;
 }
 
-const bool isSortedFromXtoN(vector<int> * elements, int startIndex)
+const bool isSortedFromXtoN(vector<int> * elements, int k, int startIndex)
 {
-	if(startIndex >= N-1 || startIndex < 0)
+	if (startIndex >= elements->size() - 1 || startIndex < 0)
 		return false;
-	for(; startIndex != N - 1; startIndex++)
+	for (; startIndex != elements->size() - 1; startIndex++)
 	{
-		if(!are2PartsInCorrectOrder(elements, startIndex, startIndex + 1))
+		if (!are2PartsInCorrectOrder(elements, k, startIndex, startIndex + 1))
 			return false;
 	}
 	return true;
 }
 
-const bool isSortedFromXtoN(vector<int> * elements, int startIndex, int NN)
+const bool isSortedFromXtoN(vector<int> * elements, int k, int startIndex,
+		int NN)
 {
-	if(startIndex >= NN-1 || startIndex < 0)
+	if (startIndex >= NN - 1 || startIndex < 0)
 		return false;
-	for(; startIndex != NN - 1; startIndex++)
+	for (; startIndex != NN - 1; startIndex++)
 	{
-		if(!are2PartsInCorrectOrder(elements, startIndex, startIndex + 1))
+		if (!are2PartsInCorrectOrder(elements, k, startIndex, startIndex + 1))
 			return false;
 	}
 	return true;
@@ -68,9 +82,9 @@ const bool isSortedFromXtoN(vector<int> * elements, int startIndex, int NN)
 void printVector(vector<int> * vec)
 {
 	vector<int>::iterator it = vec->begin();
-	for(; it != vec->end(); it++)
+	for (; it != vec->end(); it++)
 	{
-		cout<<*it<<", ";
+		cout << *it << ", ";
 	}
-	cout<<endl;
+	cout << endl;
 }

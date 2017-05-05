@@ -7,18 +7,23 @@
 
 #include "SystematicFinder.h"
 
-SystematicFinder::SystematicFinder(int k, vector<int> tip)
+SystematicFinder::SystematicFinder(vector<int> * elements, int k,
+		int startIndex)
 {
 	this->k = k;
-	this->initialVector = tip;
-	this->p = initialVector.size() - k;
-	tree.push_back(&initialVector);
-	this->emptyVectorsCount = 0;
-	this->nonEmptyVectorsCount = 1;
-	this->gantryMovesCounter = 0;
+	this->startIndex = startIndex;
+	elementsVector = elements;
+	vector<int>::iterator it = elements->begin() + startIndex;
+	vector<int> * initialVector = new vector<int>(it, elements->end());
+	p = initialVector->size() - k;
+	tree.push_back(initialVector);
+	emptyVectorsCount = 0;
+	nonEmptyVectorsCount = 1;
+	gantryMovesCounter = 0;
 	long pp = 1;
 	long sum = 0;
-	for(int i = 0; i < 22; i++)
+	treeLevelsLastIndices.reserve(22);
+	for (int i = 0; i < 22; i++)
 	{
 		treeLevelsLastIndices.push_back(sum);
 		pp *= p;
@@ -28,34 +33,40 @@ SystematicFinder::SystematicFinder(int k, vector<int> tip)
 
 SystematicFinder::~SystematicFinder()
 {
-	vector<vector<int> * >::iterator it;
-	for(it = tree.begin(); it != tree.end(); it++)
+	vector<vector<int> *>::iterator it;
+	for (it = (++(tree.begin())); it != tree.end(); it++)
 	{
-		if(*it != nullptr)
+		if (!(*it)->empty())
 			delete *it;
 	}
 }
 
-vector<int> SystematicFinder::findMoveSequence()
+unsigned int SystematicFinder::findBatch(void)
 {
-	vector<int> mvSeq;
-	int i;
-	for(i = 0; i < tree.size(); i++)
+	unsigned int i;
+	for (i = 0; i < tree.size(); i++)
 	{
-		if(!tree.at(i)->empty())
+		if (!tree.at(i)->empty())
 		{
-			if(isSetFoundInLastM(tree.at(i), 0))
+			if (isSetFoundInLastM(tree.at(i), k, 0))
 				break;
 		}
 	}
-	if(i != tree.size())
+	return i;
+}
+
+vector<int> SystematicFinder::findMoveSequence(unsigned int batchIndex)
+{
+	vector<int> mvSeq;
+
+	if (batchIndex != tree.size())
 	{
 		int divRest;
-		while(i != 0)
+		while (batchIndex != 0)
 		{
-			divRest = i % p;
-			i = (i - 1) / p;	// go to parent index
-			if(divRest == 0)
+			divRest = batchIndex % p;
+			batchIndex = (batchIndex - 1) / p;	// go to parent index
+			if (divRest == 0)
 				divRest = p;
 			divRest--;
 			mvSeq.push_back(divRest);
@@ -64,20 +75,32 @@ vector<int> SystematicFinder::findMoveSequence()
 	return mvSeq;
 }
 
+void SystematicFinder::sortLastBatch()
+{
+	if (tree.size() < 2)
+		generateTree();
+	vector<int> mvSeq = findMoveSequence(findBatch());
+	for (auto rit = mvSeq.crbegin(); rit != mvSeq.crend(); ++rit)
+	{
+		Gantry::move(elementsVector, k, *rit + startIndex);
+	}
+}
+
 void SystematicFinder::generateTree()
 {
 	vector<int> * vecPtr;
-	for(unsigned int i = 0; i < tree.size(); i++)
+	for (unsigned int i = 0; i < tree.size(); i++)
 	{
-		if(!(tree.at(i)->empty()))
+		if (!(tree.at(i)->empty()))
 		{
-			for(int j = 0; j < p; j++)
+			for (int j = 0; j < p; j++)
 			{
 				vecPtr = new vector<int>(*tree[i]);
-				vecPtr->reserve(vecPtr->size() + 2*K);
-				Gantry::move(vecPtr, j);
+				vecPtr->reserve(vecPtr->size() + 2 * k);
+				Gantry::move(vecPtr, k, j);
 				gantryMovesCounter++;
-				if(depthFirstSearch(p*i + j + 1, vecPtr) >= 0 || breadthFirstSearch(p*i + j + 1, vecPtr) >= 0)
+				if (depthFirstSearch(p * i + j + 1, vecPtr) >= 0
+						|| breadthFirstSearch(p * i + j + 1, vecPtr) >= 0)
 				{
 					vecPtr->clear();
 					vecPtr->reserve(0);
@@ -90,7 +113,7 @@ void SystematicFinder::generateTree()
 		}
 		else
 		{
-			for(int j = 0; j < p; j++)
+			for (int j = 0; j < p; j++)
 			{
 				vecPtr = new vector<int>(0);
 				tree.push_back(vecPtr);
@@ -98,17 +121,18 @@ void SystematicFinder::generateTree()
 			}
 		}
 
-		if(std::find(treeLevelsLastIndices.begin(), treeLevelsLastIndices.end(), i) != treeLevelsLastIndices.end())
-			if(allEmptyAtLevelWithIndex(i + 1))
+		if (std::find(treeLevelsLastIndices.begin(),
+				treeLevelsLastIndices.end(), i) != treeLevelsLastIndices.end())
+			if (allEmptyAtLevelWithIndex(i + 1))
 				break;
 	}
 }
 
 bool SystematicFinder::allEmptyAtLevelWithIndex(int index)
 {
-	for(unsigned int i = index; i < tree.size(); i++)
+	for (unsigned int i = index; i < tree.size(); i++)
 	{
-		if(!tree.at(i)->empty())
+		if (!tree.at(i)->empty())
 			return false;
 	}
 	return true;
@@ -121,9 +145,9 @@ int SystematicFinder::depthFirstSearch(int startIndex, vector<int> * pattern)
 	do
 	{
 		i = (i - 1) / p;
-		if(*(tree.at(i)) == *pattern)
+		if (*(tree.at(i)) == *pattern)
 			return i;
-	}while(i != 0);
+	} while (i != 0);
 
 	return -1;
 }
@@ -131,9 +155,9 @@ int SystematicFinder::depthFirstSearch(int startIndex, vector<int> * pattern)
 int SystematicFinder::breadthFirstSearch(int startIndex, vector<int> * pattern)
 {
 	startIndex--;
-	for(; startIndex >= 0; startIndex--)
+	for (; startIndex >= 0; startIndex--)
 	{
-		if(*(tree.at(startIndex)) == *pattern)
+		if (*(tree.at(startIndex)) == *pattern)
 			return true;
 	}
 	return -1;
@@ -141,20 +165,20 @@ int SystematicFinder::breadthFirstSearch(int startIndex, vector<int> * pattern)
 
 void SystematicFinder::printInfo(void)
 {
-	cout<<"Tree size: "<<tree.size()<<endl;
-	cout<<"Empty elements: "<<emptyVectorsCount<<endl;
-	cout<<"Non empty elements: "<<nonEmptyVectorsCount<<endl;
-	for(unsigned int i = 0; i < treeLevelsLastIndices.size(); i++)
+	cout << "Tree size: " << tree.size() << endl;
+	cout << "Empty elements: " << emptyVectorsCount << endl;
+	cout << "Non empty elements: " << nonEmptyVectorsCount << endl;
+	for (unsigned int i = 0; i < treeLevelsLastIndices.size(); i++)
 	{
-		cout<<treeLevelsLastIndices.at(i)<<"\t";
+		cout << treeLevelsLastIndices.at(i) << "\t";
 	}
-	cout<<endl;
+	cout << endl;
 }
 
 void SystematicFinder::printNonEmptyIndices(void)
 {
-	cout<<"Indeksy: "<<endl;
-	for(unsigned int i = 0; i < tree.size(); i++)
-		if(!tree.at(i)->empty())
-			cout<<i<<", ";
+	cout << "Indeksy: " << endl;
+	for (unsigned int i = 0; i < tree.size(); i++)
+		if (!tree.at(i)->empty())
+			cout << i << ", ";
 }

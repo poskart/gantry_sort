@@ -9,21 +9,23 @@
 
 #include <iostream>
 #include <vector>
+#include <climits>
 
 using namespace std;
 
-extern int K;
-extern int N;
+unsigned int getPossibleBatchesCount(vector<int> * elements, int k);
 
-const bool are2PartsInCorrectOrder(vector<int> * elements, int firstPosition, int secPosition);
+inline const bool are2PartsInCorrectOrder(vector<int> * elements, int k,
+		int firstPosition, int secPosition);
 
-bool isSetFound(vector<int> * vec, int index);
+bool isSetFound(vector<int> * vec, int k, int index);
 
-bool isSetFoundInLastM(vector<int> * vec, int startIndex);
+bool isSetFoundInLastM(vector<int> * vec, int k, int startIndex);
 
-const bool isSortedFromXtoN(vector<int> * elements, int startIndex);
+const bool isSortedFromXtoN(vector<int> * elements, int k, int startIndex);
 
-const bool isSortedFromXtoN(vector<int> * elements, int startIndex, int NN);
+const bool isSortedFromXtoN(vector<int> * elements, int k, int startIndex,
+		int NN);
 
 void printVector(vector<int> * vec);
 
