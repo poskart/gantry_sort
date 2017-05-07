@@ -12,6 +12,7 @@ void Gantry::moveIt(vector<int> * vec, int k, vector<int>::iterator & it)
 			vec->push_back(*it2);
 		}
 		vec->erase(it, it2);
+		gantryMoves++;
 	}
 }
 
@@ -19,5 +20,4 @@ void Gantry::move(vector<int> * vec, int k, int i)
 {
 	vector<int>::iterator it = vec->begin() + i;
 	moveIt(vec, k, it);
-	gantryMoves++;
 }

@@ -13,6 +13,12 @@
 
 using namespace std;
 
+const int findPartOnTheRight(vector<int> * elements, unsigned int startIndex,
+		int partNumber);
+
+const int findPartOnTheLeft(vector<int> * elements, unsigned int startIdxIncl,
+		int partNumber, unsigned int leftBorderIdxExcl = 0);
+
 unsigned int getPossibleBatchesCount(vector<int> * elements, int k);
 
 inline const bool are2PartsInCorrectOrder(vector<int> * elements, int k,

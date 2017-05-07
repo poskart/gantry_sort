@@ -119,11 +119,11 @@ void Sorter1::gantrySort()
 					pullKToAlignNextPartToTheLeft(elements, shuffleStartIndex,
 							currentPart);
 				}
-				else
-				{
-					endFlag = true;
-					break;
-				}
+//				else
+//				{
+//					endFlag = true;
+//					break;
+//				}
 			}
 			shuffleStartIndex++;
 			if (shuffleStartIndex >= n - k - 2)

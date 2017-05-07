@@ -7,24 +7,46 @@
 
 #include "common.h"
 
+const int findPartOnTheRight(vector<int> * elements, unsigned int startIndex,
+		int partNumber)
+{
+	for (; startIndex < elements->size(); startIndex++)
+	{
+		if (elements->at(startIndex) == partNumber)
+			return startIndex;
+	}
+	return -1;
+}
+
+const int findPartOnTheLeft(vector<int> * elements, unsigned int startIdxIncl,
+		int partNumber, unsigned int leftBorderIdxExcl)
+{
+	for (; startIdxIncl > leftBorderIdxExcl; startIdxIncl--)
+	{
+		if (elements->at(startIdxIncl) == partNumber)
+			return startIdxIncl;
+	}
+	return -1;
+}
+
 unsigned int getPossibleBatchesCount(vector<int> * elements, int k)
 {
 	unsigned int minPartsCount = UINT_MAX;
 	int * countingTable = new int[k + 1];
-	for(int i = 0; i < elements->size(); i++)
+	for (int i = 0; i < elements->size(); i++)
 	{
 		countingTable[elements->at(i)]++;
 	}
-	for(int i = 1; i < k+1; i++)
+	for (int i = 1; i < k + 1; i++)
 	{
-		if(countingTable[i] < minPartsCount)
+		if (countingTable[i] < minPartsCount)
 			minPartsCount = countingTable[i];
 	}
 	return minPartsCount;
 }
 
-inline const bool are2PartsInCorrectOrder(vector<int> * elements,
-		int k, int firstPosition, int secPosition)
+inline const bool are2PartsInCorrectOrder(vector<int> * elements, int k,
+		int firstPosition, int secPosition)
 {
 	if (firstPosition + 1 != secPosition)
 		return false;
