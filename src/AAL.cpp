@@ -55,9 +55,9 @@ int main()
 	vector<int> vec;
 	//vec = evenlyGenerator(K, N);
 	vec = {1, 3, 2, 3, 2, 4, 4, 1, 2, 3, 1, 4, 3, 4, 2, 3, 4, 3, 1, 2, 3, 4, 2, 3, 4, 1, 1, 2, 1};
+	printHistogram(&vec, K);
 
-
-	printVector(&vec);
+	printVector(&vec);cout<<endl;
 	fflush(stdout);
 	vec.reserve(N + 2 * K);
 
@@ -66,16 +66,6 @@ int main()
 	sorter1.gantrySort();
 	sorter1.printElements();
 	cout<<"\nLiczba ruchów suwnicy: "<<sorter1.getGantryMovesCount()<<endl;
-	cout<<"Sorter1 end..."<<endl<<endl;
-
-
-//	cout<<"Wektor testowy: "<<endl;
-//	K = 5;
-//	vector<int> test = {4, 2, 1, 6, 1, 3, 5};
-//	test.reserve(N + 2 * K);
-//	SystematicFinder finder = SystematicFinder(&test, K, 0);
-//	finder.sortLastBatch();
-//	printVector(&test);
 
 
 	cout<<"Sorter2:"<<endl;
@@ -83,7 +73,6 @@ int main()
 	sorter2.gantrySort();
 	sorter2.printElements();
 	cout<<"\nLiczba ruchów suwnicy: "<<sorter2.getGantryMovesCount()<<endl;
-	cout<<"Sorter2 end..."<<endl;
 
 	cout<<"Koniec..."<<endl;
 

@@ -14,11 +14,17 @@ SystematicFinder::SystematicFinder(vector<int> * elements, int k,
 	this->startIndex = startIndex;
 	elementsVector = elements;
 	gantryPtr = gPtr;
-	leftBatchElementsCount = k + 2 - (elements->size() - startIndex);
-	if(leftBatchElementsCount > 0)
-		this->startIndex -= leftBatchElementsCount;
+	if(elements->size() - startIndex < k + 2)
+	{
+		leftBatchElementsCount = k + 2 - (elements->size() - startIndex);
+		if(leftBatchElementsCount > 0)
+			this->startIndex -= leftBatchElementsCount;
+	}
+	else if(elements->at(startIndex-1) != k)
+		leftBatchElementsCount = k - elements->at(startIndex-1);
 	vector<int>::iterator it = elements->begin() + this->startIndex;
 	vector<int> * initialVector = new vector<int>(it, elements->end());
+	// p is number of tree branches - default 2 - binary tree
 	p = initialVector->size() - k;
 	tree.push_back(initialVector);
 	emptyVectorsCount = 0;

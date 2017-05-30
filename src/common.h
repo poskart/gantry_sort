@@ -36,6 +36,8 @@ const bool isSortedFromXtoN(vector<int> * elements, int k, unsigned int startInd
 const bool isSortedFromXtoN(vector<int> * elements, int k, int startIndex,
 		int NN);
 
+void printHistogram(vector<int> * vec, int k);
+
 void printVector(vector<int> * vec);
 
 #endif /* COMMON_H_ */

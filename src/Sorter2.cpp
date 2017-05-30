@@ -122,13 +122,9 @@ void Sorter2::gantrySort()
 	int maxBatchesCount = getPossibleBatchesCount();
 	int currentBatchesCount = 0;
 	unsigned int firstBatchIndex = 0;
-
 	int sortLev1, sortLev2;
 
-	printElements();
 	prepareVectorHead(maxBatchesCount);
-	cout<<"Po przygotowaniu: "<<endl;
-	printElements();
 	while (n - currentBatchesCount * k > 2 * k - 1
 			&& currentBatchesCount != maxBatchesCount)
 	{
@@ -188,7 +184,7 @@ void Sorter2::gantrySort()
 					currentBatchesCount, firstBatchIndex, n - 2 * k);
 			currentBatchesCount++;
 		}
-		printElements();
+		//printElements();
 	}
 	if (currentBatchesCount < maxBatchesCount)
 	{

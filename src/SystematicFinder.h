@@ -33,7 +33,7 @@ public:
 	void printNonEmptyIndices(void);
 private:
 	int k;
-	int p;
+	int p;				// p is number of tree branches - default 2 - binary tree
 	int startIndex;
 	int leftBatchElementsCount;	//0, 1 or 2
 	vector<int> * elementsVector;
