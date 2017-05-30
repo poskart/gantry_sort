@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <iostream>
+#include <algorithm>
 #include "common.h"
 #include "Gantry.h"
 #include "SystematicFinder.h"
@@ -22,17 +23,33 @@ public:
 	Sorter2(vector<int> * vec, int k, int n);
 	virtual ~Sorter2();
 	const int areSortedToTheLeft(vector<int> * elements,
-			int startIndexIncluded);
+			unsigned int startIndexIncluded);
 	const int findValidIdxToMovePartAtPos(vector<int> * elements,
 			int partIndex, int leftBorder, int rightBorder, int k);
 	int mvBatchMaxToTheLeft(vector<int> * el, int k, int batchCount,
 			int firstBatchIdx, int batchIdx);
 	void gantrySort();
 	void printElements(void);
+	long getGantryMovesCount(void);
+	unsigned int getPossibleBatchesCount(void);
+	vector<int> getPartsWithoutBatch(int maxBatchesCount);
+	const bool areNeededPartsBlockedOnTheLeft(int maxBatchesCount, int blockedElemCount);
+	void mvSparePartsToTheLeft(vector<int> * spareParts, int blockedElemCount);
+	vector<int>::iterator findEveryEachOfK(vector<int> * elements,
+			int startIndex, vector<int> * possibleElements);
+	void pullKToAlignNextPartToTheLeft(vector<int> * elements,
+			int startIndex, int partToBeFound);
+	const int findPartStartingBack(vector<int> * elements,
+			int shuffleStartIndex, int partnumber);
+	const bool findAndShuffleCurrentPart(vector<int> * elements,
+			int shuffleStartIndex, int partnumber);
+	void prepareVectorHead(int maxBatchesCount);
 private:
 	vector<int> * elements;
+	unsigned int * countingTable;
 	int k;
 	int n;
+	Gantry gantry;
 };
 
 #endif /* SORTER2_H_ */

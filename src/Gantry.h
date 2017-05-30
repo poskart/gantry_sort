@@ -17,11 +17,15 @@ using namespace std;
 class Gantry
 {
 public:
-	static int gantryMoves;
+	Gantry();
+	~Gantry();
+	void moveIt(vector<int> * vec, int k, vector<int>::iterator & it);
 
-	static void moveIt(vector<int> * vec, int k, vector<int>::iterator & it);
+	void move(vector<int> * vec, int k, int i);
 
-	static void move(vector<int> * vec, int k, int i);
+	long getMovesCount(void);
+private:
+	long gantryMoves;
 };
 
 

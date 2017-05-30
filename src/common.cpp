@@ -19,30 +19,14 @@ const int findPartOnTheRight(vector<int> * elements, unsigned int startIndex,
 }
 
 const int findPartOnTheLeft(vector<int> * elements, unsigned int startIdxIncl,
-		int partNumber, unsigned int leftBorderIdxExcl)
+		int partNumber, unsigned int leftBorderIdxIncl)
 {
-	for (; startIdxIncl > leftBorderIdxExcl; startIdxIncl--)
+	for (; startIdxIncl >= leftBorderIdxIncl; startIdxIncl--)
 	{
 		if (elements->at(startIdxIncl) == partNumber)
 			return startIdxIncl;
 	}
 	return -1;
-}
-
-unsigned int getPossibleBatchesCount(vector<int> * elements, int k)
-{
-	unsigned int minPartsCount = UINT_MAX;
-	int * countingTable = new int[k + 1];
-	for (int i = 0; i < elements->size(); i++)
-	{
-		countingTable[elements->at(i)]++;
-	}
-	for (int i = 1; i < k + 1; i++)
-	{
-		if (countingTable[i] < minPartsCount)
-			minPartsCount = countingTable[i];
-	}
-	return minPartsCount;
 }
 
 inline const bool are2PartsInCorrectOrder(vector<int> * elements, int k,
@@ -53,6 +37,24 @@ inline const bool are2PartsInCorrectOrder(vector<int> * elements, int k,
 	if (((elements->at(firstPosition)) % k + 1) == elements->at(secPosition))
 		return true;
 	return false;
+}
+
+unsigned int getPossibleBatchesCount(vector<int> * elements, int k)
+{
+	unsigned int * countingTable;
+	unsigned int minPartsCount = UINT_MAX;
+	countingTable = new unsigned int[k + 1]();
+	for (unsigned int i = 0; i < elements->size(); i++)
+	{
+		countingTable[elements->at(i)]++;
+	}
+	for (int i = 1; i < k + 1; i++)
+	{
+		if (countingTable[i] < minPartsCount)
+			minPartsCount = countingTable[i];
+	}
+	delete [] countingTable;
+	return minPartsCount;
 }
 
 bool isSetFound(vector<int> * vec, int k, int index)
@@ -76,7 +78,29 @@ bool isSetFoundInLastM(vector<int> * vec, int k, int startIndex)
 	return false;
 }
 
-const bool isSortedFromXtoN(vector<int> * elements, int k, int startIndex)
+bool isSetFoundInLastMmatchedToLeft(vector<int> * vec, int k, int startIndex,
+		int placesOnTheLeftToSort)
+{
+	int leftBatchElemCounter = 1;
+	for (unsigned int i = startIndex; i <= vec->size() - k;
+			i++)
+	{
+		if(leftBatchElemCounter <= placesOnTheLeftToSort)
+		{
+			if(vec->at(i) != k - placesOnTheLeftToSort + leftBatchElemCounter)
+				return false;
+			leftBatchElemCounter++;
+		}
+		else
+		{
+			if (isSetFound(vec, k, i))
+				return true;
+		}
+	}
+	return false;
+}
+
+const bool isSortedFromXtoN(vector<int> * elements, int k, unsigned int startIndex)
 {
 	if (startIndex >= elements->size() - 1 || startIndex < 0)
 		return false;

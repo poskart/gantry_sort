@@ -1,6 +1,11 @@
 #include "Gantry.h"
 
-int Gantry::gantryMoves = 0;
+Gantry::Gantry()
+{
+	gantryMoves = 0;
+}
+
+Gantry::~Gantry(){}
 
 void Gantry::moveIt(vector<int> * vec, int k, vector<int>::iterator & it)
 {
@@ -20,4 +25,9 @@ void Gantry::move(vector<int> * vec, int k, int i)
 {
 	vector<int>::iterator it = vec->begin() + i;
 	moveIt(vec, k, it);
+}
+
+long Gantry::getMovesCount()
+{
+	return gantryMoves;
 }

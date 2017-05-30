@@ -36,10 +36,14 @@ public:
 	void gantrySort();
 
 	void printElements(void);
+
+	long getGantryMovesCount(void);
+
 private:
 	vector<int> * elements;
 	int k;
 	int n;
+	Gantry gantry;
 };
 
 #endif /* SORTER1_H_ */

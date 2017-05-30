@@ -37,7 +37,7 @@ void Sorter1::pullKToAlignNextPartToTheLeft(vector<int> * elements,
 {
 	while (elements->at(startIndex) != partToBeFound)
 	{
-		Gantry::move(elements, k, startIndex);
+		gantry.move(elements, k, startIndex);
 	}
 }
 
@@ -65,7 +65,7 @@ const bool Sorter1::findAndShuffleCurrentPart(vector<int> * elements,
 		return false;
 	else if (index < n - k - 1)
 	{
-		Gantry::move(elements, k, index);
+		gantry.move(elements, k, index);
 		index = n - k;
 	}
 	/*
@@ -86,7 +86,7 @@ const bool Sorter1::findAndShuffleCurrentPart(vector<int> * elements,
 	 */
 	while (elements->at(targetPartPosition) != partnumber)
 	{
-		Gantry::move(elements, k, n - k - 1);
+		gantry.move(elements, k, n - k - 1);
 	}
 	return true;
 }
@@ -99,8 +99,8 @@ void Sorter1::gantrySort()
 	int maxBatchesCount = getPossibleBatchesCount(elements, k);
 	int currentBatchesCount = 0;
 
-	while (shuffleStartIndex < n - k - 2 && endFlag == false &&
-			currentBatchesCount != maxBatchesCount)
+	while (shuffleStartIndex < n - k - 2 && endFlag == false
+			&& currentBatchesCount != maxBatchesCount)
 	{
 		for (currentPart = 1; currentPart <= k; currentPart++)
 		{
@@ -129,11 +129,13 @@ void Sorter1::gantrySort()
 			if (shuffleStartIndex >= n - k - 2)
 				break;
 		}
-		currentBatchesCount++;
+		if(currentPart > k)
+			currentBatchesCount++;
 	}
-	if(currentBatchesCount < maxBatchesCount)
+	if (currentBatchesCount < maxBatchesCount)
 	{
-		SystematicFinder sFinder = SystematicFinder(elements, k, shuffleStartIndex);
+		SystematicFinder sFinder = SystematicFinder(elements, k,
+				shuffleStartIndex, &gantry);
 		sFinder.sortLastBatch();
 	}
 }
@@ -141,4 +143,9 @@ void Sorter1::gantrySort()
 void Sorter1::printElements(void)
 {
 	printVector(elements);
+}
+
+long Sorter1::getGantryMovesCount(void)
+{
+	return gantry.getMovesCount();
 }

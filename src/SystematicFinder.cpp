@@ -8,12 +8,16 @@
 #include "SystematicFinder.h"
 
 SystematicFinder::SystematicFinder(vector<int> * elements, int k,
-		int startIndex)
+		int startIndex, Gantry * gPtr)
 {
 	this->k = k;
 	this->startIndex = startIndex;
 	elementsVector = elements;
-	vector<int>::iterator it = elements->begin() + startIndex;
+	gantryPtr = gPtr;
+	leftBatchElementsCount = k + 2 - (elements->size() - startIndex);
+	if(leftBatchElementsCount > 0)
+		this->startIndex -= leftBatchElementsCount;
+	vector<int>::iterator it = elements->begin() + this->startIndex;
 	vector<int> * initialVector = new vector<int>(it, elements->end());
 	p = initialVector->size() - k;
 	tree.push_back(initialVector);
@@ -41,17 +45,24 @@ SystematicFinder::~SystematicFinder()
 	}
 }
 
-unsigned int SystematicFinder::findBatch(void)
+unsigned int SystematicFinder::findAnyBatch(void)
 {
 	unsigned int i;
 	for (i = 0; i < tree.size(); i++)
-	{
 		if (!tree.at(i)->empty())
-		{
 			if (isSetFoundInLastM(tree.at(i), k, 0))
 				break;
-		}
-	}
+	return i;
+}
+
+unsigned int SystematicFinder::findLeftMatchedBatch(int placesToSortOnTheLeft)
+{
+	unsigned int i;
+	for (i = 0; i < tree.size(); i++)
+		if (!tree.at(i)->empty())
+			if (isSetFoundInLastMmatchedToLeft(tree.at(i), k, 0,
+					placesToSortOnTheLeft))
+				break;
 	return i;
 }
 
@@ -79,10 +90,15 @@ void SystematicFinder::sortLastBatch()
 {
 	if (tree.size() < 2)
 		generateTree();
-	vector<int> mvSeq = findMoveSequence(findBatch());
+	unsigned int seqId;
+	if (leftBatchElementsCount <= 0)
+		seqId = findAnyBatch();
+	else
+		seqId = findLeftMatchedBatch(leftBatchElementsCount);
+	vector<int> mvSeq = findMoveSequence(seqId);
 	for (auto rit = mvSeq.crbegin(); rit != mvSeq.crend(); ++rit)
 	{
-		Gantry::move(elementsVector, k, *rit + startIndex);
+		gantryPtr->move(elementsVector, k, *rit + startIndex);
 	}
 }
 
@@ -97,7 +113,7 @@ void SystematicFinder::generateTree()
 			{
 				vecPtr = new vector<int>(*tree[i]);
 				vecPtr->reserve(vecPtr->size() + 2 * k);
-				Gantry::move(vecPtr, k, j);
+				gantryPtr->move(vecPtr, k, j);
 				gantryMovesCounter++;
 				if (depthFirstSearch(p * i + j + 1, vecPtr) >= 0
 						|| breadthFirstSearch(p * i + j + 1, vecPtr) >= 0)
