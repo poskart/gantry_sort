@@ -104,12 +104,11 @@ void Sorter1::gantrySort()
 {
 	int shuffleStartIndex = 0;
 	int currentPart;
-	bool endFlag = false;
 	int maxBatchesCount = getPossibleBatchesCount(elements, k);
 	int currentBatchesCount = 0;
 
-	while (shuffleStartIndex < n - k - 2 && endFlag == false
-			&& currentBatchesCount != maxBatchesCount)
+	while (shuffleStartIndex < n - k &&
+			currentBatchesCount != maxBatchesCount)
 	{
 		for (currentPart = 1; currentPart <= k; currentPart++)
 		{
@@ -128,7 +127,7 @@ void Sorter1::gantrySort()
 						currentPart);
 			}
 			shuffleStartIndex++;
-			if (shuffleStartIndex >= n - k - 2)
+			if (shuffleStartIndex >= n - k)
 				break;
 		}
 		if(currentPart > k)
@@ -137,7 +136,11 @@ void Sorter1::gantrySort()
 	printElements();
 	if (currentBatchesCount < maxBatchesCount)
 	{
-		int leftBatches = maxBatchesCount - currentBatchesCount;
+		int leftBatches;
+		if(elements->at(shuffleStartIndex - 1) != k)
+			leftBatches = 1;
+		else
+			leftBatches = 2;
 		SystematicFinder sFinder = SystematicFinder(elements, k,
 				shuffleStartIndex, leftBatches, &gantry);
 		sFinder.sortLastBatch();

@@ -88,7 +88,7 @@ int main()
 	K = 7;
 	N = 29;
 	vec = {6, 1, 2, 3, 2, 2, 1, 2, 5, 3, 5, 3, 1, 7, 4, 5, 6, 6, 1, 6, 4, 4, 6, 7, 4, 1, 4, 5, 7};
-	printHistogram(&vec, K);
+	printHistogram(&vec, K);maxBatchesCount - currentBatchesCount;
 	printVector(&vec);cout<<endl;
 	fflush(stdout);
 	vec.reserve(N + 2 * K);
