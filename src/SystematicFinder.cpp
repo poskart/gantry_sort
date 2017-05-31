@@ -8,10 +8,11 @@
 #include "SystematicFinder.h"
 
 SystematicFinder::SystematicFinder(vector<int> * elements, int k,
-		int startIndex, Gantry * gPtr)
+		int startIndex, int leftBatches, Gantry * gPtr)
 {
 	this->k = k;
 	this->startIndex = startIndex;
+	this->batchesToBuild = leftBatches;
 	elementsVector = elements;
 	gantryPtr = gPtr;
 	if(elements->size() - startIndex < k + 2)
@@ -33,7 +34,7 @@ SystematicFinder::SystematicFinder(vector<int> * elements, int k,
 	long pp = 1;
 	long sum = 0;
 	treeLevelsLastIndices.reserve(22);
-	for (int i = 0; i < 22; i++)
+	for (int i = 0; i < 30; i++)
 	{
 		treeLevelsLastIndices.push_back(sum);
 		pp *= p;
@@ -72,6 +73,17 @@ unsigned int SystematicFinder::findLeftMatchedBatch(int placesToSortOnTheLeft)
 	return i;
 }
 
+unsigned int SystematicFinder::matchLeftBatchOnly(int placesToSortOnTheLeft)
+{
+	unsigned int i;
+	for (i = 0; i < tree.size(); i++)
+		if (!tree.at(i)->empty())
+			if (isSequenceMatchedToTheLeft(tree.at(i), k, 0,
+					placesToSortOnTheLeft))
+				break;
+	return i;
+}
+
 vector<int> SystematicFinder::findMoveSequence(unsigned int batchIndex)
 {
 	vector<int> mvSeq;
@@ -97,7 +109,9 @@ void SystematicFinder::sortLastBatch()
 	if (tree.size() < 2)
 		generateTree();
 	unsigned int seqId;
-	if (leftBatchElementsCount <= 0)
+	if(batchesToBuild == 1)
+		seqId = matchLeftBatchOnly(leftBatchElementsCount);
+	else if (leftBatchElementsCount <= 0)
 		seqId = findAnyBatch();
 	else
 		seqId = findLeftMatchedBatch(leftBatchElementsCount);

@@ -18,6 +18,8 @@
 
 using namespace std;
 
+//#define CHECK 1
+
 vector<int> generator(int k, int n)
 {
 	srand(time(NULL));
@@ -54,9 +56,39 @@ int main()
 	int N = 29;
 	vector<int> vec;
 	//vec = evenlyGenerator(K, N);
-	vec = {1, 3, 2, 3, 2, 4, 4, 1, 2, 3, 1, 4, 3, 4, 2, 3, 4, 3, 1, 2, 3, 4, 2, 3, 4, 1, 1, 2, 1};
-	printHistogram(&vec, K);
 
+#ifndef CHECK
+	for(K = 4; K < 7; K++)
+	{
+		for(N = 20; N < 40; N++)
+		{
+			vec = generator(K, N);
+			cout<<"N = "<<N<<", K = "<<K<<endl;
+			printHistogram(&vec, K);
+
+			printVector(&vec);cout<<endl;
+			fflush(stdout);
+			vec.reserve(N + 2 * K);
+
+			cout<<"Sorter1:"<<endl;
+			Sorter1 sorter1(&vec, K, N);
+			sorter1.gantrySort();
+			sorter1.printElements();
+			cout<<"\nLiczba ruchów suwnicy: "<<sorter1.getGantryMovesCount()<<endl;
+
+
+			cout<<"Sorter2:"<<endl;
+			Sorter2 sorter2 = Sorter2(&vec, K, N);
+			sorter2.gantrySort();
+			sorter2.printElements();
+			cout<<"\nLiczba ruchów suwnicy: "<<sorter2.getGantryMovesCount()<<endl;
+		}
+	}
+#else
+	K = 7;
+	N = 29;
+	vec = {6, 1, 2, 3, 2, 2, 1, 2, 5, 3, 5, 3, 1, 7, 4, 5, 6, 6, 1, 6, 4, 4, 6, 7, 4, 1, 4, 5, 7};
+	printHistogram(&vec, K);
 	printVector(&vec);cout<<endl;
 	fflush(stdout);
 	vec.reserve(N + 2 * K);
@@ -65,14 +97,15 @@ int main()
 	Sorter1 sorter1(&vec, K, N);
 	sorter1.gantrySort();
 	sorter1.printElements();
-	cout<<"\nLiczba ruchów suwnicy: "<<sorter1.getGantryMovesCount()<<endl;
+	cout<<"Liczba ruchów suwnicy: "<<sorter1.getGantryMovesCount()<<endl<<endl;
 
 
 	cout<<"Sorter2:"<<endl;
 	Sorter2 sorter2 = Sorter2(&vec, K, N);
 	sorter2.gantrySort();
 	sorter2.printElements();
-	cout<<"\nLiczba ruchów suwnicy: "<<sorter2.getGantryMovesCount()<<endl;
+	cout<<"Liczba ruchów suwnicy: "<<sorter2.getGantryMovesCount()<<endl<<endl;
+#endif
 
 	cout<<"Koniec..."<<endl;
 

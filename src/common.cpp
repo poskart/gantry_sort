@@ -100,6 +100,20 @@ bool isSetFoundInLastMmatchedToLeft(vector<int> * vec, int k, int startIndex,
 	return false;
 }
 
+bool isSequenceMatchedToTheLeft(vector<int> * vec, int k, int startIndex,
+		int placesOnTheLeftToSort)
+{
+	int leftBatchElemCounter = 1;
+	for (unsigned int i = startIndex; i < startIndex + placesOnTheLeftToSort;
+			i++)
+	{
+		if(vec->at(i) != k - placesOnTheLeftToSort + leftBatchElemCounter)
+			return false;
+		leftBatchElemCounter++;
+	}
+	return true;
+}
+
 const bool isSortedFromXtoN(vector<int> * elements, int k, unsigned int startIndex)
 {
 	if (startIndex >= elements->size() - 1 || startIndex < 0)

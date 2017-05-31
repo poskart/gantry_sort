@@ -31,6 +31,9 @@ bool isSetFoundInLastM(vector<int> * vec, int k, int startIndex);
 bool isSetFoundInLastMmatchedToLeft(vector<int> * vec, int k, int startIndex,
 		int placesOnTheLeftToSort);
 
+bool isSequenceMatchedToTheLeft(vector<int> * vec, int k, int startIndex,
+		int placesOnTheLeftToSort);
+
 const bool isSortedFromXtoN(vector<int> * elements, int k, unsigned int startIndex);
 
 const bool isSortedFromXtoN(vector<int> * elements, int k, int startIndex,

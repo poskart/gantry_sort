@@ -44,15 +44,25 @@ void Sorter1::pullKToAlignNextPartToTheLeft(vector<int> * elements,
 const int Sorter1::findPartStartingBack(vector<int> * elements,
 		int shuffleStartIndex, int partnumber)
 {
-	int currentIndex = n - k;
-	while (currentIndex >= shuffleStartIndex)
+//	int currentIndex = n - k;
+//	while (currentIndex >= shuffleStartIndex)
+//	{
+//		for (int i = k - 1; i >= 0; i--)
+//		{
+//			if (elements->at(currentIndex + i) == partnumber)
+//				return currentIndex;
+//		}
+//		currentIndex -= k;
+//	}
+//	return -1;
+	for(int i = n - 1; i > shuffleStartIndex; i--)
 	{
-		for (int i = k - 1; i >= 0; i--)
+		if(elements->at(i) == partnumber)
 		{
-			if (elements->at(currentIndex + i) == partnumber)
-				return currentIndex;
+			while(i >= n - k)
+				i--;
+			return i;
 		}
-		currentIndex -= k;
 	}
 	return -1;
 }
@@ -64,10 +74,9 @@ const bool Sorter1::findAndShuffleCurrentPart(vector<int> * elements,
 	if (index < 0)
 		return false;
 	else if (index < n - k - 1)
-	{
 		gantry.move(elements, k, index);
-		index = n - k;
-	}
+
+	index = n - k;
 	/*
 	 * Find exact position where current part should be set
 	 * to make space between it and shuffleStartIndex divisible by k.
@@ -113,17 +122,10 @@ void Sorter1::gantrySort()
 			}
 			else
 			{
-				if (findAndShuffleCurrentPart(elements, shuffleStartIndex,
-						currentPart))
-				{
-					pullKToAlignNextPartToTheLeft(elements, shuffleStartIndex,
-							currentPart);
-				}
-//				else
-//				{
-//					endFlag = true;
-//					break;
-//				}
+				findAndShuffleCurrentPart(elements, shuffleStartIndex,
+						currentPart);
+				pullKToAlignNextPartToTheLeft(elements, shuffleStartIndex,
+						currentPart);
 			}
 			shuffleStartIndex++;
 			if (shuffleStartIndex >= n - k - 2)
@@ -132,10 +134,12 @@ void Sorter1::gantrySort()
 		if(currentPart > k)
 			currentBatchesCount++;
 	}
+	printElements();
 	if (currentBatchesCount < maxBatchesCount)
 	{
+		int leftBatches = maxBatchesCount - currentBatchesCount;
 		SystematicFinder sFinder = SystematicFinder(elements, k,
-				shuffleStartIndex, &gantry);
+				shuffleStartIndex, leftBatches, &gantry);
 		sFinder.sortLastBatch();
 	}
 }

@@ -48,20 +48,20 @@ const int Sorter2::areSortedToTheLeft(vector<int> * elements,
  * and is between left and right borders.
  */
 const int Sorter2::findValidIdxToMovePartAtPos(vector<int> * elements,
-		int partIndex, int leftBorder, int rightBorder, int k)
+		int partIndex, int leftBorderExcl, int rightBorderExcl, int k)
 {
-	if (partIndex + k - 1 < rightBorder)
+	if (partIndex + k - 1 < rightBorderExcl)
 	{
-		if (partIndex > leftBorder)
+		if (partIndex > leftBorderExcl)
 			return partIndex;
 		else
 			return -1;
 	}
 	else
 	{
-		while (partIndex + k - 1 >= rightBorder)
+		while (partIndex + k - 1 >= rightBorderExcl)
 			partIndex--;
-		if (partIndex > leftBorder)
+		if (partIndex > leftBorderExcl)
 			return partIndex;
 		else
 			return -1;
@@ -144,13 +144,13 @@ void Sorter2::gantrySort()
 				gantry.move(elements, k, n - 2 * k);// get any k from below
 			else
 			{
-				searchedPartIndex = findPartOnTheLeft(elements, n - k - 1,
+				searchedPartIndex = findPartOnTheLeft(elements, n - desiredPart - 1,
 						desiredPart,
 						firstBatchIndex + currentBatchesCount * k);
 				searchedPartIndex = findValidIdxToMovePartAtPos(elements,
 						searchedPartIndex,
 						firstBatchIndex + currentBatchesCount * k - 1,
-						n - k, k);
+						n - desiredPart, k);
 				if (searchedPartIndex > 0)
 					gantry.move(elements, k, searchedPartIndex);
 				else
@@ -159,6 +159,7 @@ void Sorter2::gantrySort()
 		}
 		else if((sortLev1 == 0 || sortLev1 == 4) && sortLev2 == 0)
 			desiredPart = 1;
+		// if no desiredPart in range n-k-1 : n-1
 		if (findPartOnTheLeft(elements, n - 1, desiredPart, n - k - 1) == -1)
 		{
 			gantry.move(elements, k, n - 2 * k);// move before inserting found elem
@@ -173,7 +174,7 @@ void Sorter2::gantrySort()
 			searchedPartIndex = findValidIdxToMovePartAtPos(elements,
 					searchedPartIndex,
 					firstBatchIndex + currentBatchesCount * k - 1,
-					n - desiredPart - 1, k);
+					n - desiredPart, k);
 			gantry.move(elements, k, searchedPartIndex);
 		}
 		while (elements->at(n - k - 1) != desiredPart)
@@ -184,12 +185,14 @@ void Sorter2::gantrySort()
 					currentBatchesCount, firstBatchIndex, n - 2 * k);
 			currentBatchesCount++;
 		}
-		//printElements();
+//		printElements();
 	}
+	printElements();
 	if (currentBatchesCount < maxBatchesCount)
 	{
+		int startIndex = firstBatchIndex + currentBatchesCount * k;
 		SystematicFinder sFinder = SystematicFinder(elements, k,
-				firstBatchIndex + currentBatchesCount * k, &gantry);
+				startIndex, 2, &gantry);
 		sFinder.sortLastBatch();
 	}
 }
@@ -253,7 +256,8 @@ void Sorter2::mvSparePartsToTheLeft(vector<int> * spareParts, int blockedElemCou
 	vector<int>::iterator currentPartIt;
 	for(int i = 0; i < blockedElemCount; i++)
 	{
-		if(std::find(spareParts->begin(), spareParts->end(), elements->at(i)) == spareParts->end())
+		currentPartIt = std::find(spareParts->begin(), spareParts->end(), elements->at(i));
+		if(currentPartIt == spareParts->end())
 		{
 			currentPartIt = findEveryEachOfK(elements, shuffleStartIndex, spareParts);
 			if (currentPartIt != spareParts->end())
@@ -271,6 +275,10 @@ void Sorter2::mvSparePartsToTheLeft(vector<int> * spareParts, int blockedElemCou
 						*currentPartIt);
 				spareParts->erase(currentPartIt);
 			}
+		}
+		else
+		{
+			spareParts->erase(currentPartIt);
 		}
 		shuffleStartIndex++;
 	}
