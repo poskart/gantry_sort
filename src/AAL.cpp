@@ -10,11 +10,14 @@
 #include <cstdlib>
 #include <time.h>
 #include <vector>
-#include <unistd.h>
 #include <algorithm>
+#include <string.h>
+#include <functional>
+#include <queue>
 #include "SystematicFinder.h"
 #include "Sorter1.h"
 #include "Sorter2.h"
+#include "Sorter3.h"
 
 using namespace std;
 
@@ -56,6 +59,11 @@ int main()
 	int N = 29;
 	vector<int> vec;
 	//vec = evenlyGenerator(K, N);
+
+//	vec = {4, 3, 1, 2, 1, 2, 3, 4, 4, 3, 4, 1, 1};
+//	std::priority_queue<std::pair<int, int>> * q =
+//			findLongestSubchains(&vec, 4, 2);
+//	print_queue(*q);
 
 #ifndef CHECK
 	for(K = 4; K < 7; K++)

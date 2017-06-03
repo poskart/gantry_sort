@@ -52,6 +52,10 @@ SystematicFinder::~SystematicFinder()
 	}
 }
 
+/**
+ * This method searches the whole tree and return index of first vector
+ * which contains any batch sequence.
+ */
 unsigned int SystematicFinder::findAnyBatch(void)
 {
 	unsigned int i;
@@ -62,6 +66,11 @@ unsigned int SystematicFinder::findAnyBatch(void)
 	return i;
 }
 
+/**
+ * This method searches the whole tree and return index of first vector
+ * which contains batch sequence and which fill up uncompleted batch
+ * sequence on the left side.
+ */
 unsigned int SystematicFinder::findLeftMatchedBatch(int placesToSortOnTheLeft)
 {
 	unsigned int i;
@@ -73,6 +82,10 @@ unsigned int SystematicFinder::findLeftMatchedBatch(int placesToSortOnTheLeft)
 	return i;
 }
 
+/**
+ * This method searches the whole tree and return index of first vector
+ * which fill up uncompleted batch sequence on the left side.
+ */
 unsigned int SystematicFinder::matchLeftBatchOnly(int placesToSortOnTheLeft)
 {
 	unsigned int i;
@@ -84,6 +97,11 @@ unsigned int SystematicFinder::matchLeftBatchOnly(int placesToSortOnTheLeft)
 	return i;
 }
 
+/**
+ *	This method search sequence of gantry moves which lead to part sequence
+ *	at position batchIndex in the tree. It goes from batchIndex node towards
+ *	the root of the tree and collects starting position for gantry move.
+ */
 vector<int> SystematicFinder::findMoveSequence(unsigned int batchIndex)
 {
 	vector<int> mvSeq;
@@ -95,6 +113,7 @@ vector<int> SystematicFinder::findMoveSequence(unsigned int batchIndex)
 		{
 			divRest = batchIndex % p;
 			batchIndex = (batchIndex - 1) / p;	// go to parent index
+			// make divRest in range: 0,1,...p-1
 			if (divRest == 0)
 				divRest = p;
 			divRest--;
@@ -104,6 +123,11 @@ vector<int> SystematicFinder::findMoveSequence(unsigned int batchIndex)
 	return mvSeq;
 }
 
+/**
+ * This methods generates tree of all possible output part sequences for
+ * each possible gantry move sequence. Next it searches for sequence which
+ * matches to previous batch or create another part batch or both.
+ */
 void SystematicFinder::sortLastBatch()
 {
 	if (tree.size() < 2)
@@ -115,6 +139,8 @@ void SystematicFinder::sortLastBatch()
 		seqId = findAnyBatch();
 	else
 		seqId = findLeftMatchedBatch(leftBatchElementsCount);
+
+	// sort end of the vector with given gantry according to found sequence
 	vector<int> mvSeq = findMoveSequence(seqId);
 	for (auto rit = mvSeq.crbegin(); rit != mvSeq.crend(); ++rit)
 	{
@@ -122,6 +148,10 @@ void SystematicFinder::sortLastBatch()
 	}
 }
 
+/**
+ * This methods generates tree of all possible output part sequences for
+ * each possible gantry move sequence.
+ */
 void SystematicFinder::generateTree()
 {
 	vector<int> * vecPtr;
@@ -129,6 +159,7 @@ void SystematicFinder::generateTree()
 	{
 		if (!(tree.at(i)->empty()))
 		{
+			// Create all children sequences
 			for (int j = 0; j < p; j++)
 			{
 				vecPtr = new vector<int>(*tree[i]);
@@ -156,7 +187,8 @@ void SystematicFinder::generateTree()
 				emptyVectorsCount++;
 			}
 		}
-
+		// If current tree element i is the last element in this tree level
+		// check if this level is empty. If so, then tree is completed.
 		if (std::find(treeLevelsLastIndices.begin(),
 				treeLevelsLastIndices.end(), i) != treeLevelsLastIndices.end())
 			if (allEmptyAtLevelWithIndex(i + 1))
@@ -164,6 +196,11 @@ void SystematicFinder::generateTree()
 	}
 }
 
+/**
+ * This method checks if tree level, which starts from 'index' index
+ * is empty or not. Returns true if this level has all vectors empty,
+ * false otherwise.
+ */
 bool SystematicFinder::allEmptyAtLevelWithIndex(int index)
 {
 	for (unsigned int i = index; i < tree.size(); i++)
@@ -174,6 +211,11 @@ bool SystematicFinder::allEmptyAtLevelWithIndex(int index)
 	return true;
 }
 
+/**
+ * This method searches tree in depth and looks for vector pointed by pattern.
+ * Returns -1 if pattern not found, otherwise returns index of tree node which
+ * vector equals to pattern.
+ */
 int SystematicFinder::depthFirstSearch(int startIndex, vector<int> * pattern)
 {
 	int i = startIndex;
@@ -188,6 +230,11 @@ int SystematicFinder::depthFirstSearch(int startIndex, vector<int> * pattern)
 	return -1;
 }
 
+/**
+ * This method searches tree in breadth and looks for vector pointed by pattern.
+ * Returns -1 if pattern not found, otherwise returns index of tree node which
+ * vector equals to pattern.
+ */
 int SystematicFinder::breadthFirstSearch(int startIndex, vector<int> * pattern)
 {
 	startIndex--;
@@ -198,7 +245,9 @@ int SystematicFinder::breadthFirstSearch(int startIndex, vector<int> * pattern)
 	}
 	return -1;
 }
-
+/**
+ * Prints statistics about systematic finder
+ */
 void SystematicFinder::printInfo(void)
 {
 	cout << "Tree size: " << tree.size() << endl;

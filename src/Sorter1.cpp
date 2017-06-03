@@ -19,7 +19,11 @@ Sorter1::~Sorter1()
 {
 	delete elements;
 }
-
+/**
+ * This method check if in the elements vector there is partToBeFound part
+ * every each of k.
+ * Returns true if partToBeFound was found, false otherwise.
+ */
 const bool Sorter1::findEveryEachOfK(const vector<int> * elements,
 		int startIndex, int partToBeFound)
 {
@@ -31,7 +35,10 @@ const bool Sorter1::findEveryEachOfK(const vector<int> * elements,
 	}
 	return false;
 }
-
+/**
+ * This method pull with gantry all elements which are between currently
+ * ordered index and index of the found part to align found part to the left.
+ */
 void Sorter1::pullKToAlignNextPartToTheLeft(vector<int> * elements,
 		int startIndex, int partToBeFound)
 {
@@ -40,24 +47,16 @@ void Sorter1::pullKToAlignNextPartToTheLeft(vector<int> * elements,
 		gantry.move(elements, k, startIndex);
 	}
 }
-
+/**
+ * This method searches for part partNumber starting from the
+ * right end and returns index of the found part.
+ */
 const int Sorter1::findPartStartingBack(vector<int> * elements,
-		int shuffleStartIndex, int partnumber)
+		int shuffleStartIndex, int partNumber)
 {
-//	int currentIndex = n - k;
-//	while (currentIndex >= shuffleStartIndex)
-//	{
-//		for (int i = k - 1; i >= 0; i--)
-//		{
-//			if (elements->at(currentIndex + i) == partnumber)
-//				return currentIndex;
-//		}
-//		currentIndex -= k;
-//	}
-//	return -1;
 	for(int i = n - 1; i > shuffleStartIndex; i--)
 	{
-		if(elements->at(i) == partnumber)
+		if(elements->at(i) == partNumber)
 		{
 			while(i >= n - k)
 				i--;
@@ -67,6 +66,12 @@ const int Sorter1::findPartStartingBack(vector<int> * elements,
 	return -1;
 }
 
+/**
+ * This method searches for part partNumber, moves it to the last k
+ * elements if is not there, and shuffle this elements so that partNumber
+ * is at position (index) between which and current shuffle index are elements
+ * which amount is divisible by k.
+ */
 const bool Sorter1::findAndShuffleCurrentPart(vector<int> * elements,
 		int shuffleStartIndex, int partnumber)
 {
@@ -100,37 +105,40 @@ const bool Sorter1::findAndShuffleCurrentPart(vector<int> * elements,
 	return true;
 }
 
+/**
+ * This method sorts elements vector using gantry sort algorithm 1
+ */
 void Sorter1::gantrySort()
 {
 	int shuffleStartIndex = 0;
-	int currentPart;
+	int desiredPart;
 	int maxBatchesCount = getPossibleBatchesCount(elements, k);
 	int currentBatchesCount = 0;
 
 	while (shuffleStartIndex < n - k &&
 			currentBatchesCount != maxBatchesCount)
 	{
-		for (currentPart = 1; currentPart <= k; currentPart++)
+		for (desiredPart = 1; desiredPart <= k; desiredPart++)
 		{
-			if (findEveryEachOfK(elements, shuffleStartIndex, currentPart)
+			if (findEveryEachOfK(elements, shuffleStartIndex, desiredPart)
 					== true)
 			{
-				if (elements->at(shuffleStartIndex) != currentPart)
+				if (elements->at(shuffleStartIndex) != desiredPart)
 					pullKToAlignNextPartToTheLeft(elements, shuffleStartIndex,
-							currentPart);
+							desiredPart);
 			}
 			else
 			{
 				findAndShuffleCurrentPart(elements, shuffleStartIndex,
-						currentPart);
+						desiredPart);
 				pullKToAlignNextPartToTheLeft(elements, shuffleStartIndex,
-						currentPart);
+						desiredPart);
 			}
 			shuffleStartIndex++;
 			if (shuffleStartIndex >= n - k)
 				break;
 		}
-		if(currentPart > k)
+		if(desiredPart > k)
 			currentBatchesCount++;
 	}
 	printElements();

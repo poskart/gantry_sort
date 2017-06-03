@@ -46,7 +46,7 @@ public:
 	void prepareVectorHead(int maxBatchesCount);
 private:
 	vector<int> * elements;
-	unsigned int * countingTable;
+	int * countingTable;
 	int k;
 	int n;
 	Gantry gantry;
