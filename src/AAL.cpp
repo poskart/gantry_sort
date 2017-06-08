@@ -82,21 +82,21 @@ int main()
 			Sorter1 sorter1(&vec, K, N);
 			sorter1.gantrySort();
 			sorter1.printElements();
-			cout<<"\nLiczba ruchów suwnicy: "<<sorter1.getGantryMovesCount()<<endl;
+			cout<<"Liczba ruchów suwnicy: "<<sorter1.getGantryMovesCount()<<endl<<endl;
 
 
 			cout<<"Sorter2:"<<endl;
 			Sorter2 sorter2 = Sorter2(&vec, K, N);
 			sorter2.gantrySort();
 			sorter2.printElements();
-			cout<<"\nLiczba ruchów suwnicy: "<<sorter2.getGantryMovesCount()<<endl;
+			cout<<"Liczba ruchów suwnicy: "<<sorter2.getGantryMovesCount()<<endl<<endl;
 		}
 	}
 #else
-	K = 7;
-	N = 29;
-	vec = {6, 1, 2, 3, 2, 2, 1, 2, 5, 3, 5, 3, 1, 7, 4, 5, 6, 6, 1, 6, 4, 4, 6, 7, 4, 1, 4, 5, 7};
-	printHistogram(&vec, K);maxBatchesCount - currentBatchesCount;
+	K = 4;
+	N = 20;
+	vec = {3, 3, 4, 2, 2, 3, 4, 2, 3, 2, 4, 1, 4, 3, 4, 2, 2, 1, 1, 4};
+	printHistogram(&vec, K);
 	printVector(&vec);cout<<endl;
 	fflush(stdout);
 	vec.reserve(N + 2 * K);

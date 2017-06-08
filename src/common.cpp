@@ -153,7 +153,25 @@ void printHistogram(vector<int> * vec, int k)
 			minPartsCount = countingTable[i];
 		cout<<"Part "<<i<<": "<<countingTable[i]<<endl;
 	}
+	delete [] countingTable;
 	cout<<"Batches: "<<minPartsCount<<endl;
+}
+
+int getBatchesCount(vector<int> * vec, int k)
+{
+	unsigned int minPartsCount = UINT_MAX;
+	unsigned int * countingTable = new unsigned int[k + 1]();
+	for (unsigned int i = 0; i < vec->size(); i++)
+	{
+		countingTable[vec->at(i)]++;
+	}
+	for (int i = 1; i < k + 1; i++)
+	{
+		if (countingTable[i] < minPartsCount)
+			minPartsCount = countingTable[i];
+	}
+	delete [] countingTable;
+	return minPartsCount;
 }
 
 void printVector(vector<int> * vec)

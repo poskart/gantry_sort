@@ -37,6 +37,9 @@ public:
 
 	void printElements(void);
 
+	void cmpltLeftBatchesBySystematic(int currentBatchesCount,
+			int maxBatchesCount, int shuffleStartIndex);
+
 	long getGantryMovesCount(void);
 
 private:

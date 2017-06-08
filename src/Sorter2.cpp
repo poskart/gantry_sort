@@ -196,7 +196,14 @@ void Sorter2::gantrySort()
 		}
 //		printElements();
 	}
-	printElements();
+//	printElements();
+//	cmpltLeftBatchesBySystematic(currentBatchesCount, maxBatchesCount,
+//			firstBatchIndex);
+}
+
+void Sorter2::cmpltLeftBatchesBySystematic(int currentBatchesCount,
+		int maxBatchesCount, int firstBatchIndex)
+{
 	if (currentBatchesCount < maxBatchesCount)
 	{
 		int startIndex = firstBatchIndex + currentBatchesCount * k;

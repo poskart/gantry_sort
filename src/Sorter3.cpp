@@ -78,6 +78,11 @@ void Sorter3::gantrySort(void)
 	int currentBatchesCount = 0;
 	std::priority_queue<std::pair<int, int>> * queue;
 
+	/**
+	 * - zwolnić pamięć kolejki zawsze!
+	 * - sprawdzać czy nie wstawiam 2 razy tego samego podłańcucha
+	 *   przy wyszukiwaniu podłańcuchów
+	 */
 	while (shuffleStartIndex < n - k &&
 			currentBatchesCount != maxBatchesCount)
 	{

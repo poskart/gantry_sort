@@ -41,6 +41,8 @@ const bool isSortedFromXtoN(vector<int> * elements, int k, int startIndex,
 
 void printHistogram(vector<int> * vec, int k);
 
+int getBatchesCount(vector<int> * vec, int k);
+
 void printVector(vector<int> * vec);
 
 #endif /* COMMON_H_ */

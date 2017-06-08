@@ -29,6 +29,8 @@ public:
 	int mvBatchMaxToTheLeft(vector<int> * el, int k, int batchCount,
 			int firstBatchIdx, int batchIdx);
 	void gantrySort();
+	void cmpltLeftBatchesBySystematic(int currentBatchesCount,
+			int maxBatchesCount, int firstBatchIndex);
 	void printElements(void);
 	long getGantryMovesCount(void);
 	unsigned int getPossibleBatchesCount(void);

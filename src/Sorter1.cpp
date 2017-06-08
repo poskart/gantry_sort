@@ -54,11 +54,11 @@ void Sorter1::pullKToAlignNextPartToTheLeft(vector<int> * elements,
 const int Sorter1::findPartStartingBack(vector<int> * elements,
 		int shuffleStartIndex, int partNumber)
 {
-	for(int i = n - 1; i > shuffleStartIndex; i--)
+	for (int i = n - 1; i > shuffleStartIndex; i--)
 	{
-		if(elements->at(i) == partNumber)
+		if (elements->at(i) == partNumber)
 		{
-			while(i >= n - k)
+			while (i >= n - k)
 				i--;
 			return i;
 		}
@@ -115,8 +115,7 @@ void Sorter1::gantrySort()
 	int maxBatchesCount = getPossibleBatchesCount(elements, k);
 	int currentBatchesCount = 0;
 
-	while (shuffleStartIndex < n - k &&
-			currentBatchesCount != maxBatchesCount)
+	while (shuffleStartIndex < n - k && currentBatchesCount != maxBatchesCount)
 	{
 		for (desiredPart = 1; desiredPart <= k; desiredPart++)
 		{
@@ -138,14 +137,22 @@ void Sorter1::gantrySort()
 			if (shuffleStartIndex >= n - k)
 				break;
 		}
-		if(desiredPart > k)
+		if (desiredPart > k)
 			currentBatchesCount++;
 	}
-	printElements();
+//	printElements();
+//	cmpltLeftBatchesBySystematic(currentBatchesCount, maxBatchesCount,
+//			shuffleStartIndex);
+
+}
+
+void Sorter1::cmpltLeftBatchesBySystematic(int currentBatchesCount,
+		int maxBatchesCount, int shuffleStartIndex)
+{
 	if (currentBatchesCount < maxBatchesCount)
 	{
 		int leftBatches;
-		if(elements->at(shuffleStartIndex - 1) != k)
+		if (elements->at(shuffleStartIndex - 1) != k)
 			leftBatches = 1;
 		else
 			leftBatches = 2;
