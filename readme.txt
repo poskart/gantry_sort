@@ -10,12 +10,22 @@ która grupe k czesci przeniesc na koniec sekwencji. Wykonac jak najmniejsza lic
 
 nazwa programu: AAL
 
-parametry wykonania:
-
+Parametry wykonania:
+-m1	<nazwa pliku> - program wczytuje z pliku parametry do testów w kolejności odpowiednio:
+	wartość początkowa k, krok k, wartość końcowa k, wartość początkowa n, krok n, wartość końcowa n. 
+	Następnie program wykonuje testy czasu wykonania dla zmieniających się wartości k i n.
+-m2 -k:firstk:stepk:lastk -n:firstn:stepn:lastn – uruchamia testy dla k w zakresie <firstk, lastk> z krokiem  stepk,
+	oraz dla n w zakresie <firstn, lastn> z krokiem  stepn. Jeśli sekwencja -k:firstk:stepk:lastk zostanie podana 
+	jako pierwsza, wyniki drukowane są dla stałego k  i zmieniającego się n. Natomiast jeśli jako pierwsza zostanie
+	 podana sekwencja -n:firstn:stepn:lastn wyniki drukowane są na standardowe wyjście dla stałego n i zmiennych wartości k.
+-m3 -kwartosc x x x x x x x x…..x – wykonywany jest pojedynczy test algorytmów sortujących dla danego k o wartości wartosc
+	dla podanej sekwencji elementów x x x x … x. Na standardowe wyjście drukowany jest histogram podanego ciągu, ilość zestawów,
+	 wynikowe ciągi po sortowaniu poszczególnymi algorytmami, czas sortowania oraz liczba ruchów suwnicy.
 
 
 Metody rozwiązania problemu:
 W programmie zaimplementowano 3 algorytmy sortowania za pomocą suwnicy. Odpowiadają im klasy: Sorter1, Sorter2, SystematicFinder.
+
 1. Pierwszy algorytm Sorter1 układa elementy od lewej strony, wyszukując aktualnie brakujący w ciągu
 element y a następnie usuwając wszystkie możliwe elementy pomiędzy znalezionym y a ostatnim z ułożonych po lewej stronie - x, formując 
 podciąg ...xy....

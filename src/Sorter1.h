@@ -15,6 +15,7 @@
 #include "SystematicFinder.h"
 
 using namespace std;
+using namespace std::chrono;
 
 class Sorter1
 {
@@ -42,11 +43,14 @@ public:
 
 	long getGantryMovesCount(void);
 
+	const long getSortingTime(void);
+
 private:
 	vector<int> * elements;
 	int k;
 	int n;
 	Gantry gantry;
+	long prevSortingTime;
 };
 
 #endif /* SORTER1_H_ */

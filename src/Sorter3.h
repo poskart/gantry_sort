@@ -18,6 +18,7 @@
 #include "SystematicFinder.h"
 
 using namespace std;
+using namespace std::chrono;
 typedef std::priority_queue<std::pair<int, int>> intPairQueue;
 
 class Sorter3
@@ -25,14 +26,34 @@ class Sorter3
 public:
 	Sorter3(vector<int> * vec, int k, int n);
 	void gantrySort(void);
-	void findLeftMatchingPartInTheQueue(intPairQueue * q, int currentPart);
+	std::pair<int, int> findBestFittedSubchain(intPairQueue * q, int desiredPart);
+	void removeBatchesBetweenIdcs(vector<int> * elements,
+			int startIndex, int partIndex);
+
+	const bool findEveryEachOfK(const vector<int> * elements,
+			int startIndex, int partToBeFound);
+
+	void pullKToAlignNextPartToTheLeft(vector<int> * elements,
+			int startIndex, int partToBeFound);
+
+	const int findPartStartingBack(vector<int> * elements,
+			int shuffleStartIndex, int partNumber);
+
+	const bool findAndShuffleCurrentPart(vector<int> * elements,
+			int shuffleStartIndex, int partNumber);
+
+	int shuffleCurrentSubchain(vector<int> * elements,
+			int subchainStartIdx, int subchPosition);
 	void printElements(void);
+	long getGantryMovesCount(void);
+	const long getSortingTime(void);
 	virtual ~Sorter3();
 private:
 	vector<int> * elements;
 	int k;
 	int n;
 	Gantry gantry;
+	long prevSortingTime;
 };
 
 template<typename T> void print_queue(T& q) {

@@ -16,7 +16,7 @@
 #include "SystematicFinder.h"
 
 using namespace std;
-
+using namespace std::chrono;
 class Sorter2
 {
 public:
@@ -46,12 +46,14 @@ public:
 	const bool findAndShuffleCurrentPart(vector<int> * elements,
 			int shuffleStartIndex, int partnumber);
 	void prepareVectorHead(int maxBatchesCount);
+	const long getSortingTime(void);
 private:
 	vector<int> * elements;
 	int * countingTable;
 	int k;
 	int n;
 	Gantry gantry;
+	long prevSortingTime;
 };
 
 #endif /* SORTER2_H_ */

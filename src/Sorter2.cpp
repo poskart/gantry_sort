@@ -14,6 +14,7 @@ Sorter2::Sorter2(vector<int> * vec, int k, int n)
 	this->n = n;
 	this->k = k;
 	this->countingTable = nullptr;
+	this->prevSortingTime = 0;
 }
 
 Sorter2::~Sorter2()
@@ -133,6 +134,7 @@ void Sorter2::gantrySort()
 	unsigned int firstBatchIndex = 0;
 	int sortLev1, sortLev2;
 
+	high_resolution_clock::time_point t1 = high_resolution_clock::now();
 	prepareVectorHead(maxBatchesCount);
 	while (n - currentBatchesCount * k > 2 * k - 1
 			&& currentBatchesCount != maxBatchesCount)
@@ -196,6 +198,8 @@ void Sorter2::gantrySort()
 		}
 //		printElements();
 	}
+	 high_resolution_clock::time_point t2 = high_resolution_clock::now();
+	 prevSortingTime = duration_cast<microseconds>( t2 - t1 ).count();
 //	printElements();
 //	cmpltLeftBatchesBySystematic(currentBatchesCount, maxBatchesCount,
 //			firstBatchIndex);
@@ -423,4 +427,9 @@ void Sorter2::prepareVectorHead(int maxBatchesCount)
 		if (areNeededPartsBlockedOnTheLeft(maxBatchesCount, blockedElemCount))
 			mvSparePartsToTheLeft(&freeParts, blockedElemCount);
 	}
+}
+
+const long Sorter2::getSortingTime(void)
+{
+	return prevSortingTime;
 }

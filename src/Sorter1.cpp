@@ -13,6 +13,7 @@ Sorter1::Sorter1(vector<int> * vec, int k, int n)
 	this->elements->reserve(vec->size() + k);
 	this->n = n;
 	this->k = k;
+	this->prevSortingTime = 0;
 }
 
 Sorter1::~Sorter1()
@@ -115,6 +116,7 @@ void Sorter1::gantrySort()
 	int maxBatchesCount = getPossibleBatchesCount(elements, k);
 	int currentBatchesCount = 0;
 
+	high_resolution_clock::time_point t1 = high_resolution_clock::now();
 	while (shuffleStartIndex < n - k && currentBatchesCount != maxBatchesCount)
 	{
 		for (desiredPart = 1; desiredPart <= k; desiredPart++)
@@ -140,6 +142,8 @@ void Sorter1::gantrySort()
 		if (desiredPart > k)
 			currentBatchesCount++;
 	}
+	high_resolution_clock::time_point t2 = high_resolution_clock::now();
+	prevSortingTime = duration_cast<microseconds>( t2 - t1 ).count();
 //	printElements();
 //	cmpltLeftBatchesBySystematic(currentBatchesCount, maxBatchesCount,
 //			shuffleStartIndex);
@@ -170,4 +174,9 @@ void Sorter1::printElements(void)
 long Sorter1::getGantryMovesCount(void)
 {
 	return gantry.getMovesCount();
+}
+
+const long Sorter1::getSortingTime(void)
+{
+	return prevSortingTime;
 }
