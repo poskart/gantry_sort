@@ -1,4 +1,4 @@
-Piotr Poskart, 244117
+Piotr Poskart, 19.06.2017
 
 Treść problemu:
 
