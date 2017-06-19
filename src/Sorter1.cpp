@@ -144,10 +144,41 @@ void Sorter1::gantrySort()
 	}
 	high_resolution_clock::time_point t2 = high_resolution_clock::now();
 	prevSortingTime = duration_cast<microseconds>( t2 - t1 ).count();
-//	printElements();
-//	cmpltLeftBatchesBySystematic(currentBatchesCount, maxBatchesCount,
-//			shuffleStartIndex);
+}
 
+void Sorter1::gantrySortWatch()
+{
+	int shuffleStartIndex = 0;
+	int desiredPart;
+	int maxBatchesCount = getPossibleBatchesCount(elements, k);
+	int currentBatchesCount = 0;
+
+	while (shuffleStartIndex < n - k && currentBatchesCount != maxBatchesCount)
+	{
+		for (desiredPart = 1; desiredPart <= k; desiredPart++)
+		{
+			if (findEveryEachOfK(elements, shuffleStartIndex, desiredPart)
+					== true)
+			{
+				if (elements->at(shuffleStartIndex) != desiredPart)
+					pullKToAlignNextPartToTheLeft(elements, shuffleStartIndex,
+							desiredPart);
+			}
+			else
+			{
+				findAndShuffleCurrentPart(elements, shuffleStartIndex,
+						desiredPart);
+				pullKToAlignNextPartToTheLeft(elements, shuffleStartIndex,
+						desiredPart);
+			}
+			shuffleStartIndex++;
+			if (shuffleStartIndex >= n - k)
+				break;
+			printElements();
+		}
+		if (desiredPart > k)
+			currentBatchesCount++;
+	}
 }
 
 void Sorter1::cmpltLeftBatchesBySystematic(int currentBatchesCount,
@@ -179,4 +210,9 @@ long Sorter1::getGantryMovesCount(void)
 const long Sorter1::getSortingTime(void)
 {
 	return prevSortingTime;
+}
+
+long int Sorter1::complexity(long int k, long int n)
+{
+	return n*n*(1+1/(long double)k) + n*(k*k+2*k);
 }

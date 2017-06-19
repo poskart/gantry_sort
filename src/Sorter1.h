@@ -36,6 +36,8 @@ public:
 
 	void gantrySort();
 
+	void gantrySortWatch();
+
 	void printElements(void);
 
 	void cmpltLeftBatchesBySystematic(int currentBatchesCount,
@@ -44,6 +46,8 @@ public:
 	long getGantryMovesCount(void);
 
 	const long getSortingTime(void);
+
+	static long int complexity(long int k, long int n);
 
 private:
 	vector<int> * elements;

@@ -26,6 +26,7 @@ class Sorter3
 public:
 	Sorter3(vector<int> * vec, int k, int n);
 	void gantrySort(void);
+	void gantrySortWatch(void);
 	std::pair<int, int> findBestFittedSubchain(intPairQueue * q, int desiredPart);
 	void removeBatchesBetweenIdcs(vector<int> * elements,
 			int startIndex, int partIndex);
@@ -47,6 +48,7 @@ public:
 	void printElements(void);
 	long getGantryMovesCount(void);
 	const long getSortingTime(void);
+	static long int complexity(long int k, long int n);
 	virtual ~Sorter3();
 private:
 	vector<int> * elements;

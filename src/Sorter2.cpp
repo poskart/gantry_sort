@@ -196,13 +196,83 @@ void Sorter2::gantrySort()
 					currentBatchesCount, firstBatchIndex, n - 2 * k);
 			currentBatchesCount++;
 		}
-//		printElements();
 	}
 	 high_resolution_clock::time_point t2 = high_resolution_clock::now();
 	 prevSortingTime = duration_cast<microseconds>( t2 - t1 ).count();
-//	printElements();
-//	cmpltLeftBatchesBySystematic(currentBatchesCount, maxBatchesCount,
-//			firstBatchIndex);
+}
+
+void Sorter2::gantrySortWatch()
+{
+	int desiredPart;
+	int searchedPartIndex;
+	int maxBatchesCount = getPossibleBatchesCount();
+	int currentBatchesCount = 0;
+	unsigned int firstBatchIndex = 0;
+	int sortLev1, sortLev2;
+
+	prepareVectorHead(maxBatchesCount);
+	while (n - currentBatchesCount * k > 2 * k - 1
+			&& currentBatchesCount != maxBatchesCount)
+	{
+		sortLev1 = areSortedToTheLeft(elements, n - k - 2);
+		if (sortLev1 <= k - 1)
+		{
+			desiredPart = sortLev1 + 1;
+		}
+		sortLev2 = areSortedToTheLeft(elements, n - k - 1);
+		if ((sortLev2 > sortLev1 || sortLev1 == k) && sortLev2 > 0
+				&& sortLev2 <= k - 1)
+		{
+			desiredPart = sortLev2 + 1;
+			gantry.move(elements, k, n - 2 * k);
+			for (int i = 0; i < k; i++)
+				gantry.move(elements, k, n - k - 1);
+			if (elements->at(n - 1) == desiredPart)	// if desired in last elem
+				gantry.move(elements, k, n - 2 * k);	// get any k from below
+			else
+			{
+				searchedPartIndex = findPartOnTheLeft(elements,
+						n - desiredPart - 1, desiredPart,
+						firstBatchIndex + currentBatchesCount * k);
+				searchedPartIndex = findValidIdxToMovePartAtPos(elements,
+						searchedPartIndex,
+						firstBatchIndex + currentBatchesCount * k - 1,
+						n - desiredPart, k);
+				if (searchedPartIndex > 0)
+					gantry.move(elements, k, searchedPartIndex);
+				else
+					cout << "Error! cannot find proper element" << endl;
+			}
+		}
+		else if ((sortLev1 == 0 || sortLev1 == k) && sortLev2 == 0)
+			desiredPart = 1;
+		// if no desiredPart in range n-k-1 : n-1
+		if (findPartOnTheLeft(elements, n - 1, desiredPart, n - k - 1) == -1)
+		{
+			gantry.move(elements, k, n - 2 * k);// move before inserting found elem
+			if (desiredPart == 1)
+				searchedPartIndex = findPartOnTheLeft(elements, n - 1,
+						desiredPart, firstBatchIndex + currentBatchesCount * k);
+			else
+				searchedPartIndex = findPartOnTheLeft(elements,
+						n - desiredPart - 1, desiredPart,
+						firstBatchIndex + currentBatchesCount * k);
+			searchedPartIndex = findValidIdxToMovePartAtPos(elements,
+					searchedPartIndex,
+					firstBatchIndex + currentBatchesCount * k - 1,
+					n - desiredPart, k);
+			gantry.move(elements, k, searchedPartIndex);
+		}
+		while (elements->at(n - k - 1) != desiredPart)
+			gantry.move(elements, k, n - k - 1);
+		if (desiredPart == k)
+		{
+			firstBatchIndex = mvBatchMaxToTheLeft(elements, k,
+					currentBatchesCount, firstBatchIndex, n - 2 * k);
+			currentBatchesCount++;
+		}
+		printElements();
+	}
 }
 
 void Sorter2::cmpltLeftBatchesBySystematic(int currentBatchesCount,
@@ -432,4 +502,9 @@ void Sorter2::prepareVectorHead(int maxBatchesCount)
 const long Sorter2::getSortingTime(void)
 {
 	return prevSortingTime;
+}
+
+long int Sorter2::complexity(long int k, long int n)
+{
+	return n*n/(long double)(2*k) + n*k*(5+2*k);
 }

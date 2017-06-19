@@ -29,6 +29,7 @@ public:
 	int mvBatchMaxToTheLeft(vector<int> * el, int k, int batchCount,
 			int firstBatchIdx, int batchIdx);
 	void gantrySort();
+	void gantrySortWatch();
 	void cmpltLeftBatchesBySystematic(int currentBatchesCount,
 			int maxBatchesCount, int firstBatchIndex);
 	void printElements(void);
@@ -47,6 +48,7 @@ public:
 			int shuffleStartIndex, int partnumber);
 	void prepareVectorHead(int maxBatchesCount);
 	const long getSortingTime(void);
+	static long int complexity(long int k, long int n);
 private:
 	vector<int> * elements;
 	int * countingTable;

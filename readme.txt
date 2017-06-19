@@ -11,16 +11,11 @@ która grupe k czesci przeniesc na koniec sekwencji. Wykonac jak najmniejsza lic
 nazwa programu: AAL
 
 Parametry wykonania:
--m1	<nazwa pliku> - program wczytuje z pliku parametry do testów w kolejności odpowiednio:
-	wartość początkowa k, krok k, wartość końcowa k, wartość początkowa n, krok n, wartość końcowa n. 
-	Następnie program wykonuje testy czasu wykonania dla zmieniających się wartości k i n.
--m2 -k:firstk:stepk:lastk -n:firstn:stepn:lastn – uruchamia testy dla k w zakresie <firstk, lastk> z krokiem  stepk,
-	oraz dla n w zakresie <firstn, lastn> z krokiem  stepn. Jeśli sekwencja -k:firstk:stepk:lastk zostanie podana 
-	jako pierwsza, wyniki drukowane są dla stałego k  i zmieniającego się n. Natomiast jeśli jako pierwsza zostanie
-	 podana sekwencja -n:firstn:stepn:lastn wyniki drukowane są na standardowe wyjście dla stałego n i zmiennych wartości k.
--m3 -kwartosc x x x x x x x x…..x – wykonywany jest pojedynczy test algorytmów sortujących dla danego k o wartości wartosc
-	dla podanej sekwencji elementów x x x x … x. Na standardowe wyjście drukowany jest histogram podanego ciągu, ilość zestawów,
-	 wynikowe ciągi po sortowaniu poszczególnymi algorytmami, czas sortowania oraz liczba ruchów suwnicy.
+-m1	<nazwa pliku> - program wczytuje z pliku parametry do testów w kolejności odpowiednio:wartość początkowa k, krok k, wartość końcowa k, wartość początkowa n, krok n, wartość końcowa n. Następnie program wykonuje testy czasu wykonania dla zmieniających się wartości k i n.
+-m2 -k:firstk:stepk:lastk -n:firstn:stepn:lastn – uruchamia testy dla k w zakresie <firstk, lastk> z krokiem  stepk, oraz dla n w zakresie <firstn, lastn> z krokiem  stepn. Jeśli sekwencja -k:firstk:stepk:lastk zostanie podana jako pierwsza, wyniki drukowane są dla stałego k  i zmieniającego się n. Natomiast jeśli jako pierwsza zostanie podana sekwencja -n:firstn:stepn:lastn wyniki drukowane są na standardowe wyjście dla stałego n i zmiennych wartości k.
+-m3 -kwartosc x x x x x x x x…..x – wykonywany jest pojedynczy test algorytmów sortujących dla danego k o wartości wartosc dla podanej sekwencji elementów x x x x … x. Na standardowe wyjście drukowany jest histogram podanego ciągu, ilość zestawów, wynikowe ciągi po sortowaniu poszczególnymi algorytmami, czas sortowania oraz liczba ruchów suwnicy.
+-m4 -k:firstk:stepk:lastk -n:firstn:stepn:lastn -program wykonuje test złożoności dla podanych, ustalonych k (z przedziału <firstk, lastk> z krokiem stepk) oraz n zmieniającego się od  firstn do lastn z krokiem  stepn. Po wykonaniu testu drukowane są informacje o obliczonym współczynniku q(n).
+-m5 -kwartosc x x x x x x x x…..x – podobnie jak -m3, jednak po każdym kroku głównej pętli każdego z algorytmów wyświetlany jest aktualny wektor.
 
 
 Metody rozwiązania problemu:
@@ -36,7 +31,11 @@ iterowanie" rozumie się przesuwanie suwnicą k elementów na pozycjach n - k - 
 n-1 na pozycji n - k - 1. W ten sposób na pozycji n - k - 1 można ustawić dowolny z ostatnich k+1 elementów i dołączyć go do już ułożonej sekwencji.
 Po ułożeniu kompletu jest on przesuwany maksymalnie do lewej strony.
 
-3. Trzeci algorytm to algorytm przeszukiwania systematycznego. Algorytm ten dla n elementów, o k częściach w zestawie tworzy
+3. Trzeci algorytm działa na takiej samej zasadzie co algorytm opisany w punkcie 1. Jedyną różnicą jest to, że   dla każdego kolejnego miejsca wyszukuje on 
+wśród jeszcze nie ułożonych elementów maksymalny podciąg ciągu 1 2….k i dokłada go do lewej strony zamiast pojedynczych elementów. Jeżeli podciągi nie występują,
+algorytm działa tak samo jak algorytm 1.
+
+4. Czwarty algorytm to algorytm przeszukiwania systematycznego. Algorytm ten dla n elementów, o k częściach w zestawie tworzy
 drzewo wszyskich możliwych sekwencji ruchów suwnicy. Pierwszy poziom drzewa zawiera n - k możliwych wektórów części, każdy po przesunięciu
 suwnicą elementów z pod indeksu od 0 do n - k - 1. Drugi poziom drzewa dla każdego wektora z pierwszego poziomu wykonuje tą samą ilość (n - k)
 możliwych przesunięć. W efekcie powstaje (n-k)^d możliwych wektorów ułożeń elementów, które mogą być przeszukiwane w poszukiwaniu

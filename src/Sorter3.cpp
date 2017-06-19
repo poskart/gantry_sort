@@ -151,6 +151,85 @@ void Sorter3::gantrySort(void)
 	prevSortingTime = duration_cast<microseconds>( t2 - t1 ).count();
 }
 
+
+void Sorter3::gantrySortWatch(void)
+{
+	int shuffleStartIndex = 0;
+	int desiredPart = 1;
+	int maxBatchesCount = getPossibleBatchesCount(elements, k);
+	int currentBatchesCount = 0;
+	std::priority_queue<std::pair<int, int>> * queue;
+	std::pair<int, int> pair;
+	int tmp, newElemCount, tmpIdx;
+
+	while (shuffleStartIndex < n - k &&
+			currentBatchesCount != maxBatchesCount)
+	{
+		if(elements->at(shuffleStartIndex) != desiredPart)
+		{
+			queue = findLongestSubchains(elements, k, shuffleStartIndex);
+			pair = findBestFittedSubchain(queue, desiredPart);
+			if(pair.first != -1)
+			{
+				if((pair.second - shuffleStartIndex)%k == 0)
+				{
+					removeBatchesBetweenIdcs(elements, shuffleStartIndex,
+						pair.second);
+					newElemCount = pair.first;
+				}
+				else
+				{
+					if(pair.second < n - k)
+					{
+						gantry.move(elements, k, pair.second);
+						tmpIdx = n - k;
+					}
+					else
+						tmpIdx = pair.second;
+					tmp = shuffleCurrentSubchain(elements, shuffleStartIndex,
+							tmpIdx);
+					removeBatchesBetweenIdcs(elements, shuffleStartIndex, tmp);
+					newElemCount = pair.first > n-tmp ? n-tmp : pair.first;
+				}
+				shuffleStartIndex += newElemCount;
+				desiredPart = (elements->at(shuffleStartIndex-1))%k + 1;
+			}
+			else
+			{
+				if (findEveryEachOfK(elements, shuffleStartIndex, desiredPart)
+						== true)
+				{
+					pullKToAlignNextPartToTheLeft(elements, shuffleStartIndex,
+							desiredPart);
+				}
+				else
+				{
+					if(findAndShuffleCurrentPart(elements, shuffleStartIndex,
+							desiredPart) == false)
+						return;
+					pullKToAlignNextPartToTheLeft(elements, shuffleStartIndex,
+							desiredPart);
+				}
+				shuffleStartIndex++;
+				desiredPart = desiredPart%k + 1;
+			}
+			if (shuffleStartIndex >= n - k)
+								break;
+			if(desiredPart == 1)
+				currentBatchesCount++;
+			delete queue;
+		}
+		else
+		{
+			shuffleStartIndex++;
+			desiredPart = desiredPart%k + 1;
+			if(desiredPart == 1)
+				currentBatchesCount++;
+		}
+		printElements();
+	}
+}
+
 /**
  * This method pull with gantry all elements which are between currently
  * ordered index and index of the found part to align found part to the left.
@@ -307,4 +386,9 @@ long Sorter3::getGantryMovesCount(void)
 const long Sorter3::getSortingTime(void)
 {
 	return prevSortingTime;
+}
+
+long int Sorter3::complexity(long int k, long int n)
+{
+	return n*n*(1+1/(long double)k) + n*(k*k+2*k) + 2*n*n*log2(n);
 }

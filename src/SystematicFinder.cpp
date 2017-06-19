@@ -15,7 +15,7 @@ SystematicFinder::SystematicFinder(vector<int> * elements, int k,
 	this->batchesToBuild = leftBatches;
 	elementsVector = elements;
 	gantryPtr = gPtr;
-	if(elements->size() - startIndex < k + 2)
+	if((int)elements->size() - startIndex < k + 2)
 	{
 		leftBatchElementsCount = k + 2 - (elements->size() - startIndex);
 		if(leftBatchElementsCount > 0)
